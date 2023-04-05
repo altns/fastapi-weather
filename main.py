@@ -9,22 +9,20 @@ app.include_router(temperature_router)
 app.include_router(wind_velocity_router)
 
 TORTOISE_ORM = {
-    'connections': {'default': 'sqlite://db.sqlite3'},
-    'apps': {
-        'models': {
-            'models': ['models'],
-            'default_connection': 'default',
+    "connections": {"default": "sqlite://db.sqlite3"},
+    "apps": {
+        "models": {
+            "models": ["models"],
+            "default_connection": "default",
         }
-    }
+    },
 }
 
 register_tortoise(
-    app,
-    config=TORTOISE_ORM,
-    generate_schemas=True,
-    add_exception_handlers=True
+    app, config=TORTOISE_ORM, generate_schemas=True, add_exception_handlers=True
 )
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
