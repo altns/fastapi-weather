@@ -31,17 +31,25 @@ To use this API, you can clone this repository and set up a virtual environment.
 #### Windows
 
 `$ git clone https://github.com/altns/fastapi-weather.git`
+
 `$ cd weather-api`
+
 `$ python3 -m venv env`
+
 `$ venv\Scripts\activate`
+
 `$ pip install -r requirements.txt`
 
 #### macOS/Linux
 
 `$ git clone https://github.com/altns/fastapi-weather.git`
+
 `$ cd weather-api`
+
 `$ python3 -m venv env`
+
 `$ source env/bin/activate`
+
 `$ pip install -r requirements.txt`
 
 Once you have set up the environment, you can start the API server with the following command:
