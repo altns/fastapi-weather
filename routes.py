@@ -4,7 +4,6 @@ from tortoise.exceptions import DoesNotExist
 
 
 from models import Temperature, WindVelocity, TemperatureSchema, WindVelocitySchema
-# from schemas import TemperatureSchema, WindVelocitySchema
 
 temperature_router = APIRouter()
 wind_velocity_router = APIRouter()
@@ -12,7 +11,7 @@ wind_velocity_router = APIRouter()
 
 @temperature_router.post("/temperature", response_model=TemperatureSchema)
 async def create_temperature(temperature: TemperatureSchema):
-    temperature_obj = await Temperature.create(**temperature.dict())
+    temperature_obj = await Temperature.create(value=temperature.value)
     return await TemperatureSchema.from_tortoise_orm(temperature_obj)
 
 
@@ -33,8 +32,9 @@ async def get_temperature(id: int):
 @temperature_router.put("/temperature/{id}", response_model=TemperatureSchema)
 async def update_temperature(id: int, temperature: TemperatureSchema):
     try:
-        await Temperature.filter(id=id).update(**temperature.dict(exclude_unset=True))
         temperature_obj = await Temperature.get(id=id)
+        temperature_obj.update_from_dict({"value": temperature.value})
+        await temperature_obj.save()
         return await TemperatureSchema.from_tortoise_orm(temperature_obj)
     except DoesNotExist:
         raise HTTPException(status_code=404, detail="Temperature not found")
@@ -50,7 +50,7 @@ async def delete_temperature(id: int):
 
 @wind_velocity_router.post("/wind_velocity", response_model=WindVelocitySchema)
 async def create_wind_velocity(wind_velocity: WindVelocitySchema):
-    wind_velocity_obj = await WindVelocity.create(**wind_velocity.dict())
+    wind_velocity_obj = await WindVelocity.create(value=wind_velocity.value)
     return await WindVelocitySchema.from_tortoise_orm(wind_velocity_obj)
 
 
@@ -71,16 +71,17 @@ async def get_wind_velocity(id: int):
 @wind_velocity_router.put("/wind_velocity/{id}", response_model=WindVelocitySchema)
 async def update_wind_velocity(id: int, wind_velocity: WindVelocitySchema):
     try:
-        await WindVelocity.filter(id=id).update(**wind_velocity.dict(exclude_unset=True))
         wind_velocity_obj = await WindVelocity.get(id=id)
+        wind_velocity_obj.update_from_dict({"value": wind_velocity.value})
+        await wind_velocity_obj.save()
         return await WindVelocitySchema.from_tortoise_orm(wind_velocity_obj)
     except DoesNotExist:
         raise HTTPException(status_code=404, detail="Wind velocity not found")
 
 
 @wind_velocity_router.delete("/wind_velocity/{id}", response_model=WindVelocitySchema)
-async def update_wind_velocity(id: int, wind_velocity: WindVelocitySchema):
-    await WindVelocity.filter(id=id).delete()
+async def delete_wind_velocity(id: int):
+    deleted_count = await WindVelocity.filter(id=id).delete()
     if not deleted_count:
         raise HTTPException(status_code=404, detail="Wind velocity not found")
     return {"deleted": deleted_count}
