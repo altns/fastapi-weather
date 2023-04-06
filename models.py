@@ -8,11 +8,11 @@ class Temperature(Model):
     value = fields.FloatField()
     created_at = fields.DatetimeField(auto_now_add=True)
 
-TemperatureSchema = pydantic_model_creator(Temperature, name="Temperature")
+TemperatureSchema = pydantic_model_creator(Temperature, name="Temperature", exclude=("id", "created_at"))
 
 class WindVelocity(Model):
     id = fields.IntField(pk=True)
     value = fields.FloatField()
     created_at = fields.DatetimeField(auto_now_add=True)
 
-WindVelocitySchema = pydantic_model_creator(WindVelocity, name="WindVelocity")
+WindVelocitySchema = pydantic_model_creator(WindVelocity, name="WindVelocity", exclude=("id", "created_at"))

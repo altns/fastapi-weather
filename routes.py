@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
+from tortoise.exceptions import DoesNotExist
+
 
 from models import Temperature, WindVelocity, TemperatureSchema, WindVelocitySchema
 # from schemas import TemperatureSchema, WindVelocitySchema
@@ -31,7 +33,7 @@ async def get_temperature(id: int):
 @temperature_router.put("/temperature/{id}", response_model=TemperatureSchema)
 async def update_temperature(id: int, temperature: TemperatureSchema):
     try:
-        await Temperature.filter(id=id).update(**temperature.dict())
+        await Temperature.filter(id=id).update(**temperature.dict(exclude_unset=True))
         temperature_obj = await Temperature.get(id=id)
         return await TemperatureSchema.from_tortoise_orm(temperature_obj)
     except DoesNotExist:
@@ -69,14 +71,14 @@ async def get_wind_velocity(id: int):
 @wind_velocity_router.put("/wind_velocity/{id}", response_model=WindVelocitySchema)
 async def update_wind_velocity(id: int, wind_velocity: WindVelocitySchema):
     try:
-        await WindVelocity.filter(id=id).update(**wind_velocity.dict())
+        await WindVelocity.filter(id=id).update(**wind_velocity.dict(exclude_unset=True))
         wind_velocity_obj = await WindVelocity.get(id=id)
         return await WindVelocitySchema.from_tortoise_orm(wind_velocity_obj)
     except DoesNotExist:
         raise HTTPException(status_code=404, detail="Wind velocity not found")
 
 
-@wind_velocity_router.put("/wind_velocity/{id}", response_model=WindVelocitySchema)
+@wind_velocity_router.delete("/wind_velocity/{id}", response_model=WindVelocitySchema)
 async def update_wind_velocity(id: int, wind_velocity: WindVelocitySchema):
     await WindVelocity.filter(id=id).delete()
     if not deleted_count:
