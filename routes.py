@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 
-from models import Temperature, WindVelocity
-from schemas import TemperatureSchema, WindVelocitySchema
+from models import Temperature, WindVelocity, TemperatureSchema, WindVelocitySchema
+# from schemas import TemperatureSchema, WindVelocitySchema
 
 temperature_router = APIRouter()
 wind_velocity_router = APIRouter()
